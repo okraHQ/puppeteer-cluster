@@ -16,8 +16,12 @@ export default abstract class SingleBrowserImplementation extends ConcurrencyImp
     private openInstances: number = 0;
     private waitingForRepairResolvers: (() => void)[] = [];
 
-    public constructor(options: puppeteer.LaunchOptions, puppeteer: any) {
-        super(options, puppeteer);
+    public constructor(
+        options: puppeteer.LaunchOptions,
+        puppeteer: any,
+        concurrencyOptions: { holdPageConcurrency?: boolean; } = {}
+    ) {
+        super(options, puppeteer, concurrencyOptions);
     }
 
     private async repair() {

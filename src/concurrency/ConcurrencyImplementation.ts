@@ -11,14 +11,20 @@ export default abstract class ConcurrencyImplementation {
 
     protected options: LaunchOptions;
     protected puppeteer: any;
+    protected concurrencyOptions: { holdPageConcurrency?: boolean; };
 
     /**
      * @param options  Options that should be provided to puppeteer.launch
      * @param puppeteer  puppeteer object (like puppeteer or puppeteer-core)
      */
-    public constructor(options: LaunchOptions, puppeteer: any) {
+    public constructor(
+        options: LaunchOptions,
+        puppeteer: any,
+        concurrencyOptions: { holdPageConcurrency?: boolean; } = {}
+    ) {
         this.options = options;
         this.puppeteer = puppeteer;
+        this.concurrencyOptions = concurrencyOptions;
     }
 
     /**

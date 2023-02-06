@@ -28,6 +28,7 @@ interface ClusterOptions {
     skipDuplicateUrls: boolean;
     sameDomainDelay: number;
     puppeteer: any;
+    holdPageConcurrency: boolean;
 }
 
 type Partial<T> = {
@@ -51,6 +52,7 @@ const DEFAULT_OPTIONS: ClusterOptions = {
     skipDuplicateUrls: false,
     sameDomainDelay: 0,
     puppeteer: undefined,
+    holdPageConcurrency: false,
 };
 
 interface TaskFunctionArguments<JobData> {
@@ -140,7 +142,11 @@ export default class Cluster<JobData = any, ReturnData = any> extends EventEmitt
         }
 
         if (this.options.concurrency === Cluster.CONCURRENCY_PAGE) {
-            this.browser = new builtInConcurrency.Page(browserOptions, puppeteer);
+            this.browser = new builtInConcurrency.Page(
+                browserOptions,
+                puppeteer,
+                { holdPageConcurrency: this.options.holdPageConcurrency }
+            );
         } else if (this.options.concurrency === Cluster.CONCURRENCY_CONTEXT) {
             this.browser = new builtInConcurrency.Context(browserOptions, puppeteer);
         } else if (this.options.concurrency === Cluster.CONCURRENCY_BROWSER) {
