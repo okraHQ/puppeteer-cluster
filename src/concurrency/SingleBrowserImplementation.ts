@@ -94,7 +94,11 @@ export default abstract class SingleBrowserImplementation extends ConcurrencyImp
                 };
             },
 
-            close: async () => {},
+            close: async () => {
+                if (this.concurrencyOptions.reusePage) {
+                    await timeoutExecute(BROWSER_TIMEOUT, this.freeResources(resources));
+                }
+            },
 
             repair: async () => {
                 debug('Repair requested');
