@@ -17,6 +17,7 @@ const debug = util.debugGenerator('Cluster');
 
 interface ClusterOptions {
     concurrency: number | ConcurrencyImplementationClassType;
+    concurrencyOptions: { reusePage: boolean };
     maxConcurrency: number;
     workerCreationDelay: number;
     puppeteerOptions: PuppeteerNodeLaunchOptions;
@@ -28,7 +29,6 @@ interface ClusterOptions {
     skipDuplicateUrls: boolean;
     sameDomainDelay: number;
     puppeteer: any;
-    holdPageConcurrency: boolean;
 }
 
 type Partial<T> = {
@@ -39,6 +39,9 @@ type ClusterOptionsArgument = Partial<ClusterOptions>;
 
 const DEFAULT_OPTIONS: ClusterOptions = {
     concurrency: 2, // CONTEXT
+    concurrencyOptions: {
+        reusePage: false,
+    },
     maxConcurrency: 1,
     workerCreationDelay: 0,
     puppeteerOptions: {
@@ -51,8 +54,7 @@ const DEFAULT_OPTIONS: ClusterOptions = {
     retryDelay: 0,
     skipDuplicateUrls: false,
     sameDomainDelay: 0,
-    puppeteer: undefined,
-    holdPageConcurrency: false,
+    puppeteer: undefined
 };
 
 interface TaskFunctionArguments<JobData> {
@@ -145,7 +147,7 @@ export default class Cluster<JobData = any, ReturnData = any> extends EventEmitt
             this.browser = new builtInConcurrency.Page(
                 browserOptions,
                 puppeteer,
-                { holdPageConcurrency: this.options.holdPageConcurrency }
+                this.options.concurrencyOptions,
             );
         } else if (this.options.concurrency === Cluster.CONCURRENCY_CONTEXT) {
             this.browser = new builtInConcurrency.Context(browserOptions, puppeteer);

@@ -19,7 +19,7 @@ export default abstract class SingleBrowserImplementation extends ConcurrencyImp
     public constructor(
         options: puppeteer.LaunchOptions,
         puppeteer: any,
-        concurrencyOptions: { holdPageConcurrency?: boolean; } = {}
+        concurrencyOptions: { reusePage?: boolean; } = {}
     ) {
         super(options, puppeteer, concurrencyOptions);
     }
@@ -83,7 +83,9 @@ export default abstract class SingleBrowserImplementation extends ConcurrencyImp
 
                     close: async () => {
                         this.openInstances -= 1; // decrement first in case of error
-                        await timeoutExecute(BROWSER_TIMEOUT, this.freeResources(resources));
+                        if (!this.concurrencyOptions.reusePage) {
+                            await timeoutExecute(BROWSER_TIMEOUT, this.freeResources(resources));
+                        }
 
                         if (this.repairRequested) {
                             await this.repair();
