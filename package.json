@@ -8,7 +8,8 @@
     "build": "tsc",
     "test": "jest",
     "coverage": "jest --coverage",
-    "dev": "tsc --watch"
+    "dev": "tsc --watch",
+    "postinstall": "npm run build"
   },
   "author": "Thomas Dondorf",
   "repository": {
