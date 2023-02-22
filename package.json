@@ -1,5 +1,5 @@
 {
-  "name": "puppeteer-cluster",
+  "name": "@okrahq/puppeteer-cluster",
   "version": "0.23.0",
   "description": "Cluster management for puppeteer",
   "main": "dist/index.js",
